@@ -3,8 +3,8 @@ import os
 import signal
 import sys
 from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.embeddings import HuggingFaceEmbeddings
 import google.generativeai as genai
+from langchain_community.vectorstores import Chroma
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -27,17 +27,15 @@ You are a helpful and informative bot that answers questions using text from the
 """).format(query=query, context=context)
     return prompt
     
-    
-
 
 def get_relevant_context_from_db(query):
     context = ""
-    embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2",model_kwargs={"device" : "cpu"})
-    vector_db = Chroma(persist_director="./chroma_db_nccn", embedding_function=embedding_function)
+    embedding_function = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={"device": "cpu"})
+    vector_db = Chroma(persist_directory="./chroma_db_nccn", embedding_function=embedding_function)
     search_results = vector_db.similarity_search(query, k=6)
     for result in search_results:
         context += result.page_content + "\n"
-    return context 
+    return context
 
 def generate_answer(prompt):
     genai.configure(api_key=api_key)

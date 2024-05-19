@@ -3,8 +3,11 @@ from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader
 
+# RUN ENVIRONMENT
+# python rag.py
+
 # Load the PDF document
-loaders = [PyPDFLoader("./report.pdf")]
+loaders = [PyPDFLoader("./WintersCatalog.pdf")]
 
 docs = []
 

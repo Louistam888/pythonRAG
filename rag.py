@@ -5,10 +5,9 @@ import sys
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import google.generativeai as genai
 from langchain_community.vectorstores import Chroma
-
 from dotenv import load_dotenv
-load_dotenv()
 
+load_dotenv()
 api_key = os.getenv('GEMINI_API_KEY')
 
 def signal_handler(sig, frame):
@@ -17,15 +16,16 @@ def signal_handler(sig, frame):
 signal.signal(signal.SIGINT, signal_handler)
 
 def generate_rag_prompt(query, context):
-    escaped = context.repalce("''","").replace('""',"").replace("\n", " ")
+    escaped = context.replace("''", "").replace('""', "").replace("\n", " ")
     prompt = ("""
-You are a helpful and informative bot that answers questions using text from the referecne context included below. \ Be sure to respond in a complete sentence, being comprehensive, including all relevant background information. \ However you are talking to a non-technical audience so be sure to breakdown complicated concepts and strike a friendly and conversation tone.If the context is irrelevant to the answer, you may ignore it.
+You are a helpful and informative bot that answers questions using text from the reference context included below. Be sure to respond in a complete sentence, being comprehensive, including all relevant background information. However, you are talking to a non-technical audience, so be sure to break down complicated concepts and strike a friendly and conversational tone. If the context is irrelevant to the answer, you may ignore it.
               QUESTION: `{query}`
               CONTEXT: `{conText}`
 
               ANSWER:
-""").format(query=query, context=context)
+""").format(query=query, conText=context)
     return prompt
+
     
 
 def get_relevant_context_from_db(query):
@@ -39,7 +39,7 @@ def get_relevant_context_from_db(query):
 
 def generate_answer(prompt):
     genai.configure(api_key=api_key)
-    model = genai.GenerativeModel(model_image="gemini-pro")
+    model = genai.GenerativeModel(model_name="gemini-pro")
     answer = model.generate_content(prompt)
     return answer.text
 
